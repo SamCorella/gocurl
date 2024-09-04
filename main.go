@@ -20,8 +20,15 @@ func main() {
 
 	defer connection.Close()
 
-	fmt.Println("connecting to " + host)
-	fmt.Println("Sending request GET /" + path + " HTTP/1.1")
-	fmt.Println("Host: " + host)
-	fmt.Println("Accept: */*")
+	request := "GET /" + path + " HTTP/1.1\r\nHost: " + host + "\r\nAccept: */*\r\n\r\n"
+
+	fmt.Println("Sending request " + request)
+	connection.Write([]byte(request))
+	
+	buffer := make([]byte, 1024)
+	bytesRead, err := connection.Read(buffer)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(buffer[:bytesRead]))
 }
